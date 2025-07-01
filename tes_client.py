@@ -1,7 +1,11 @@
 import json
-import requests
 import os
+import requests
 from typing import Dict, Any, List, Tuple
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class TESClient:
@@ -274,7 +278,7 @@ class TESClient:
   '{self.base_url}' \\
   -H 'accept: text/plain' \\
   -H 'Authorization: Bearer **TOKEN-HERE**' \\
-  -H 'Content-Type: application/json-patch+json' \\
+  -H 'Content-Type: application/json' \\
   -d '{template_json}'"""
         
         return curl_command
@@ -296,11 +300,19 @@ class TESClient:
         headers = {
             'accept': 'text/plain',
             'Authorization': f'Bearer {token}',
-            'Content-Type': 'application/json-patch+json'
+            'Content-Type': 'application/json'
         }
         
         try:
             response = requests.post(self.base_url, headers=headers, json=template)
+            
+            # Debug: Print response details for 400 errors
+            if response.status_code == 400:
+                print(f"400 Bad Request Response:")
+                print(f"Status Code: {response.status_code}")
+                print(f"Response Headers: {dict(response.headers)}")
+                print(f"Response Content: {response.text}")
+            
             response.raise_for_status()  # Raise an exception for bad status codes
             return response.json()
         except requests.exceptions.RequestException as e:

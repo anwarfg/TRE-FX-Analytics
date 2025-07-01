@@ -2,8 +2,13 @@
 ### name and output are just to be able to identify the query, different filenames can be done when they're retrieved
 
 import json
-import requests
 import os
+import requests
+from typing import Dict, Any, Tuple
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def generate_tes_task(
     query: str,
@@ -285,7 +290,7 @@ def generate_curl_command(template: dict, base_url: str = None) -> str:
   '{base_url}' \\
   -H 'accept: text/plain' \\
   -H 'Authorization: Bearer **TOKEN-HERE**' \\
-  -H 'Content-Type: application/json-patch+json' \\
+  -H 'Content-Type: application/json' \\
   -d '{template_json}'"""
     
     return curl_command
@@ -313,7 +318,7 @@ def submit_tes_task(template: dict, token: str, base_url: str = None) -> dict:
     headers = {
         'accept': 'text/plain',
         'Authorization': f'Bearer {token}',
-        'Content-Type': 'application/json-patch+json'
+        'Content-Type': 'application/json'
     }
     
     try:

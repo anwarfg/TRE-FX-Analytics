@@ -3,12 +3,15 @@ import time
 import os
 from typing import List, Dict, Any, Optional, Union
 import numpy as np
+from dotenv import load_dotenv
 from data_processor import DataProcessor
 from statistical_analyzer import StatisticalAnalyzer
 from tes_client import TESClient
 from minio_client import MinIOClient
 from query_builder import QueryBuilder
 
+# Load environment variables from .env file
+load_dotenv()
 
 class AnalysisEngine:
     """
@@ -105,10 +108,9 @@ class AnalysisEngine:
             )
             
             result = self.tes_client.submit_task(submission_task, self.token)
-            print("Task submitted successfully:")
-            print(json.dumps(result, indent=2))
             
             task_id = result['id']
+            print(f"Task ID: {task_id}")
             results_paths = [f"{int(task_id) + i + 1}/output.csv" for i in range(n_results)]
             
             # Collect results from MinIO
@@ -394,7 +396,7 @@ if __name__ == "__main__":
         print("Please set your authentication token before running examples")
         token = "your_token_here"  # Placeholder for demonstration
     
-    engine = AnalysisEngine(token, project="YourProject")  # Use your project name
+    engine = AnalysisEngine(token)  # Will use TRE_FX_PROJECT from environment
     
     # Example: Run variance analysis first, then mean analysis on the same data
     user_query = """SELECT value_as_number FROM public.measurement 

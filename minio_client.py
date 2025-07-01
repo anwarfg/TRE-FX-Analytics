@@ -1,11 +1,15 @@
+import os
+import time
 import requests
+import json
+from typing import Dict, List, Optional
 import minio
+from dotenv import load_dotenv
 from minio import Minio
 import xml.etree.ElementTree as ET
-from typing import Optional, List, Dict, Any
-import time
-import os
 
+# Load environment variables from .env file
+load_dotenv()
 
 class TokenExpiredError(Exception):
     """Exception raised when the provided token has expired."""
